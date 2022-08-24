@@ -1,5 +1,9 @@
 package de.m3y.prometheus.exporter.fsimage;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 
 import de.m3y.hadoop.hdfs.hfsa.util.IECBinary;
@@ -11,10 +15,7 @@ public class Config {
     /**
      * Default file size distribution bucket limits.
      */
-    private static final List<String> DEFAULT_FILE_SIZE_DISTRIBUTION_BUCKETS =
-            Collections.unmodifiableList(Arrays.asList(
-                    "0", "1 MiB", "32 MiB", "64 MiB", "128 MiB", "1 GiB", "10 GiB"
-            ));
+    private static final List<String> DEFAULT_FILE_SIZE_DISTRIBUTION_BUCKETS = Collections.unmodifiableList(Arrays.asList("0", "1 MiB", "32 MiB", "64 MiB", "128 MiB", "1 GiB", "10 GiB"));
 
     /**
      * Path where HDFS NameNode stores fsimage file snapshots
@@ -54,6 +55,38 @@ public class Config {
      */
     private List<String> fileSizeDistributionBuckets = DEFAULT_FILE_SIZE_DISTRIBUTION_BUCKETS;
 
+    /**
+     * Download fsimage from namenode webservers
+     */
+    private boolean fetchFromRemoteNamenode = true;
+
+    /**
+     * Namenode to download url from!
+     */
+    private URL[] namenodeUrls;
+
+    /**
+     * Principal/Keytab to use to connect with namenode Spnego Service
+     */
+    private String principal;
+    private String keytabPath;
+
+    public String getPrincipal(){
+        return principal;
+    }
+
+    public void setPrincipal(String principal){
+        this.principal = principal;
+    }
+
+    public String getKeytabPath(){
+        return principal;
+    }
+
+    public void setKeytabPath(String keytabPath){
+        this.keytabPath = keytabPath;
+    }
+
     public String getFsImagePath() {
         return fsImagePath;
     }
@@ -76,6 +109,26 @@ public class Config {
 
     public boolean isSkipFileDistributionForPathStats() {
         return skipFileDistributionForPathStats;
+    }
+
+    public boolean isFetchFromRemoteNamenode() {
+        return fetchFromRemoteNamenode;
+    }
+
+    public void setFetchFromRemoteNamenode(boolean fetchFromRemoteNamenode) {
+        this.fetchFromRemoteNamenode = fetchFromRemoteNamenode;
+    }
+
+    public URL[] getNamenodeUrls() {
+        return namenodeUrls;
+    }
+
+    public void setNamenodeUris(String[] namenodes) throws MalformedURLException {
+        URL[] namenodeUrls = new URL[namenodes.length];
+        for (int i = 0; i < namenodes.length; i++) {
+            namenodeUrls[i] = new URL(namenodes[i]);
+        }
+        this.namenodeUrls = namenodeUrls;
     }
 
     public void setSkipFileDistributionForPathStats(boolean skipFileDistributionForPathStats) {

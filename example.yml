@@ -31,3 +31,4 @@ pathSets:
 skipFileDistributionForPathSetStats : true
 # Configure file size distribution buckets, supporting IEC units of KiB, MiB, GiB, TiB, PiB
 fileSizeDistributionBuckets: ['0','1MiB', '32MiB', '64MiB', '128MiB', '1GiB', '10GiB']
+# active remote namenode fetching!
